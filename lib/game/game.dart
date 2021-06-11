@@ -1,18 +1,27 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/gestures.dart';
 import 'package:flame/parallax.dart';
-import 'package:flame/sprite.dart';
+
+import 'constats.dart';
+import 'dino.dart';
+import 'enemy.dart';
 
 const double groundHeight = 32;
 const double dinoTopBottomSpacing = 10;
 const double numberOfTilesAlongWidth = 10;
 
-class MyGame extends BaseGame {
-  SpriteAnimationComponent _dino = new SpriteAnimationComponent();
+class MyGame extends BaseGame with TapDetector {
+  Dino? _dino;
+  Enemy? _angryPigGreen;
 
   @override
   Future<void> onLoad() async {
-    await images.load('dino.png');
+    await images.load(dinoPng);
+    await images.load(angryPigGreenPng);
+    await images.load(angryPigRedPng);
+    await images.load(batPng);
+    await images.load(rinoPng);
 
     final parallaxImages = [
       loadParallaxImage('parallax/plx-1.png'),
@@ -24,7 +33,11 @@ class MyGame extends BaseGame {
     ];
     final layers = parallaxImages.map((image) async => ParallaxLayer(
         await image,
-        velocityMultiplier: Vector2(parallaxImages.indexOf(image) * 1, 0)));
+        velocityMultiplier: Vector2(
+            parallaxImages.indexOf(image) == 5
+                ? 3.33
+                : parallaxImages.indexOf(image) * 1,
+            0)));
 
     final parallaxComponent = ParallaxComponent.fromParallax(
       Parallax(
@@ -32,42 +45,33 @@ class MyGame extends BaseGame {
         baseVelocity: Vector2(60, 0),
       ),
     );
-
-    final spriteSheet = SpriteSheet.fromColumnsAndRows(
-        image: images.fromCache('dino.png'), columns: 24, rows: 1);
-
-    final idleAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 0, to: 3);
-
-    final runAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 4, to: 10);
-
-    final kickAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 11, to: 13);
-
-    final hitAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 14, to: 16);
-
-    final sprintAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 17, to: 23);
-
-    _dino = new SpriteAnimationComponent(
-      animation: runAnimation,
-    );
-
     add(parallaxComponent);
-    add(_dino);
+
+    _dino = new Dino(images.fromCache(dinoPng));
+    _angryPigGreen = new Enemy(EnemyType.AngryPigRed, images);
+
+    add(_dino!);
+    add(_angryPigGreen!);
   }
 
   @override
   void onResize(Vector2 canvasSize) {
     super.onResize(canvasSize);
 
-    _dino.height = _dino.width = canvasSize[0] / numberOfTilesAlongWidth;
-    _dino.x = _dino.width;
-    _dino.y =
-        canvasSize[1] - groundHeight - _dino.height + dinoTopBottomSpacing;
+    _dino?.setPosition(canvasSize);
+    _angryPigGreen?.setPosition(canvasSize);
+
+    // _dino.height = _dino.width = canvasSize[0] / numberOfTilesAlongWidth;
+    // _dino.x = _dino.width;
+    // _dino.y =
+    //     canvasSize[1] - groundHeight - _dino.height + dinoTopBottomSpacing;
 
     print(canvasSize.toString());
+  }
+
+  @override
+  void onTapDown(TapDownInfo event) {
+    super.onTapDown(event);
+    _dino!.jump();
   }
 }
