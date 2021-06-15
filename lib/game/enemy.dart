@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame/assets.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
@@ -14,6 +16,8 @@ class EnemyData {
   final int rows;
   final int textureHeight;
   final int textureWidth;
+  final int speed;
+  final bool canFly;
 
   EnemyData({
     required this.image,
@@ -21,13 +25,18 @@ class EnemyData {
     required this.rows,
     required this.textureHeight,
     required this.textureWidth,
+    this.speed = 250,
+    this.canFly = false,
   });
 }
 
 class Enemy extends SpriteAnimationComponent {
+  EnemyData? _myData;
+  static Random _random = Random();
+
   static Map<EnemyType, EnemyData> _enemyDetails = {
     EnemyType.AngryPigGreen: EnemyData(
-      columns: 15,
+      columns: 16,
       rows: 1,
       image: angryPigGreenPng,
       textureHeight: 30,
@@ -41,64 +50,62 @@ class Enemy extends SpriteAnimationComponent {
       textureWidth: 36,
     ),
     EnemyType.Bat: EnemyData(
-      columns: 7,
-      rows: 1,
-      image: batPng,
-      textureHeight: 30,
-      textureWidth: 46,
-    ),
+        columns: 7,
+        rows: 1,
+        image: batPng,
+        textureHeight: 30,
+        textureWidth: 46,
+        speed: 300,
+        canFly: true),
     EnemyType.Rino: EnemyData(
-      columns: 6,
-      rows: 1,
-      image: rinoPng,
-      textureHeight: 34,
-      textureWidth: 52,
-    ),
+        columns: 6,
+        rows: 1,
+        image: rinoPng,
+        textureHeight: 34,
+        textureWidth: 52,
+        speed: 350),
   };
 
-  double speed = 200;
-  Vector2 canvasSize = Vector2.zero();
-  int textureWidth = 0;
-  int textureHeight = 0;
-
   Enemy(EnemyType type, Images images) {
-    final enemyData = _enemyDetails[type];
+    _myData = _enemyDetails[type];
 
     final spriteSheet = new SpriteSheet.fromColumnsAndRows(
-      image: images.fromCache(enemyData!.image),
-      columns: enemyData.columns,
-      rows: enemyData.rows,
+      image: images.fromCache(_myData!.image),
+      columns: _myData!.columns,
+      rows: _myData!.rows,
     );
 
     this.animation = spriteSheet.createAnimation(
-        row: 0, stepTime: 0.1, from: 0, to: enemyData.columns - 1);
+        row: 0, stepTime: 0.1, from: 0, to: _myData!.columns - 1);
 
-    print(spriteSheet.srcSize[0]);
-    print(spriteSheet.srcSize[1]);
-
-    textureWidth = enemyData.textureWidth;
-    textureHeight = enemyData.textureHeight;
+    this.anchor = Anchor.center;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    this.x -= speed * dt;
-
-    if (this.x < (-this.width)) {
-      this.x = this.canvasSize[0] + this.width;
-    }
+    this.x -= _myData!.speed * dt;
   }
 
-  void setPosition(Vector2 canvasSize) {
-    double scaledFactor =
-        (canvasSize[0] / numberOfTilesAlongWidth) / textureWidth;
+  @override
+  void onGameResize(Vector2 canvasSize) {
+    super.onGameResize(canvasSize);
 
-    this.height = textureHeight * scaledFactor;
-    this.width = textureWidth * scaledFactor;
+    double scaledFactor =
+        (canvasSize[0] / numberOfTilesAlongWidth) / _myData!.textureWidth;
+
+    this.height = _myData!.textureHeight * scaledFactor;
+    this.width = _myData!.textureWidth * scaledFactor;
 
     this.x = canvasSize[0] + this.width;
-    this.y = canvasSize[1] - groundHeight - this.height;
-    this.canvasSize = canvasSize;
+    this.y = canvasSize[1] - groundHeight - (this.height / 2);
+
+    if (_myData!.canFly && _random.nextBool()) {
+      this.y -= this.height;
+    }
+
+    if (this.x < (-this.width)) {
+      this.remove();
+    }
   }
 }

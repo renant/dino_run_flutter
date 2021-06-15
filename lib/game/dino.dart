@@ -10,6 +10,8 @@ class Dino extends SpriteAnimationComponent {
   SpriteAnimation? _kickAnimation;
   SpriteAnimation? _hitAnimation;
   SpriteAnimation? _sprintAnimation;
+  Timer? _timer;
+  bool _isHit = false;
 
   double speedY = 0.0;
   double yMax = 0.0;
@@ -34,6 +36,11 @@ class Dino extends SpriteAnimationComponent {
         spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 17, to: 23);
 
     this.animation = _runAnimation;
+    _timer = Timer(2, callback: () {
+      run();
+    });
+
+    this.anchor = Anchor.center;
   }
 
   @override
@@ -52,25 +59,35 @@ class Dino extends SpriteAnimationComponent {
       this.y = this.yMax;
       this.speedY = 0.0;
     }
+
+    _timer!.update(dt);
   }
 
   bool isOnGround() {
     return (this.y >= this.yMax);
   }
 
-  void setPosition(Vector2 canvasSize) {
+  @override
+  void onGameResize(Vector2 canvasSize) {
+    super.onGameResize(canvasSize);
     this.height = this.width = canvasSize[0] / numberOfTilesAlongWidth;
     this.x = this.width;
-    this.y = canvasSize[1] - groundHeight - this.height + dinoTopBottomSpacing;
+    this.y =
+        canvasSize[1] - groundHeight - (this.height / 2) + dinoTopBottomSpacing;
     this.yMax = this.y;
   }
 
   void run() {
+    _isHit = false;
     this.animation = _runAnimation;
   }
 
   void hit() {
-    this.animation = _hitAnimation;
+    if (!_isHit) {
+      this.animation = _hitAnimation;
+      _timer!.start();
+      _isHit = true;
+    }
   }
 
   void jump() {

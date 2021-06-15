@@ -1,3 +1,4 @@
+import 'package:dino_run/game/enemy_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
@@ -13,7 +14,9 @@ const double numberOfTilesAlongWidth = 10;
 
 class MyGame extends BaseGame with TapDetector {
   Dino? _dino;
-  Enemy? _angryPigGreen;
+  EnemyManager? _enemyManager;
+  TextComponent? _scoreText;
+  double score = 0;
 
   @override
   Future<void> onLoad() async {
@@ -48,30 +51,40 @@ class MyGame extends BaseGame with TapDetector {
     add(parallaxComponent);
 
     _dino = new Dino(images.fromCache(dinoPng));
-    _angryPigGreen = new Enemy(EnemyType.AngryPigRed, images);
 
     add(_dino!);
-    add(_angryPigGreen!);
+
+    _enemyManager = new EnemyManager();
+    add(_enemyManager!);
+
+    _scoreText = TextComponent(score.toInt().toString());
+    add(_scoreText!);
   }
 
   @override
   void onResize(Vector2 canvasSize) {
     super.onResize(canvasSize);
 
-    _dino?.setPosition(canvasSize);
-    _angryPigGreen?.setPosition(canvasSize);
-
-    // _dino.height = _dino.width = canvasSize[0] / numberOfTilesAlongWidth;
-    // _dino.x = _dino.width;
-    // _dino.y =
-    //     canvasSize[1] - groundHeight - _dino.height + dinoTopBottomSpacing;
-
-    print(canvasSize.toString());
+    _scoreText?.x = (canvasSize[0] / 2) - (_scoreText!.width / 2);
+    _scoreText?.y = canvasSize[1] - (canvasSize[1] + _scoreText!.height - 20);
   }
 
   @override
   void onTapDown(TapDownInfo event) {
     super.onTapDown(event);
     _dino!.jump();
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    score += 60 * dt;
+    _scoreText!.text = score.toInt().toString();
+
+    components.whereType<Enemy>().forEach((enemy) {
+      if (_dino!.distance(enemy) < 20) {
+        _dino!.hit();
+      }
+    });
   }
 }
