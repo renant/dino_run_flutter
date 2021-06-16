@@ -23,9 +23,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Build
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
+      
+      - name: Build
         with:
           flutter-version: '2.0.5'
       - run: flutter pub get
@@ -34,6 +35,5 @@ jobs:
 
       
       - name: Step 2
-      - uses: actions/checkout@v2
-      - run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
+        run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
