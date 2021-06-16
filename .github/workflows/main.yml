@@ -35,3 +35,13 @@ jobs:
 
       - run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
+      - uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source_file: './build/web/index.html'
+          destination_repo: 'renant/renant.github.io'
+          destination_folder: 'dino_run'
+          user_email: 'renan_replay@live.com'
+          user_name: 'renant'
+          commit_message: 'Update dino run'
