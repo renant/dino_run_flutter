@@ -39,7 +39,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source_file: './build/web/index.html'
+          source_file: './build/web/'
           destination_repo: 'renant/renant.github.io'
           destination_folder: 'dino_run'
           user_email: 'renan_replay@live.com'
