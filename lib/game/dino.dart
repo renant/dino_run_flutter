@@ -14,7 +14,6 @@ class Dino extends SpriteAnimationComponent {
   bool _isHit = false;
 
   double speedY = 0.0;
-  double speedJumpBase = 0.0;
   double yMax = 0.0;
 
   Dino(Image image) {
@@ -76,7 +75,6 @@ class Dino extends SpriteAnimationComponent {
     this.y =
         canvasSize[1] - groundHeight - (this.height / 2) + dinoTopBottomSpacing;
     this.yMax = this.y;
-    this.speedJumpBase = (canvasSize[0] / 2);
   }
 
   void run() {
@@ -94,7 +92,7 @@ class Dino extends SpriteAnimationComponent {
 
   void jump() {
     if (isOnGround()) {
-      this.speedY = -speedJumpBase;
+      this.speedY = -500;
     }
   }
 }
