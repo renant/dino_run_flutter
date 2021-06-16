@@ -29,12 +29,10 @@ jobs:
 
         with:
           flutter-version: '2.2.2'
-      - run: flutter pub get
-      - run: flutter build web
+
 
       - uses: erickzanardo/flutter-gh-pages@v3
-        with:
-          workingDir: example
+
 
       - run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
