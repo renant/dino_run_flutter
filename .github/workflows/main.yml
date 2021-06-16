@@ -34,7 +34,5 @@ jobs:
 
       
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
+      - run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
