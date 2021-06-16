@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:dino_run/game/enemy_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/parallax.dart';
+import 'package:flutter/material.dart';
 
 import 'constats.dart';
 import 'dino.dart';
@@ -57,7 +60,15 @@ class MyGame extends BaseGame with TapDetector {
     _enemyManager = new EnemyManager();
     add(_enemyManager!);
 
-    _scoreText = TextComponent(score.toInt().toString());
+    overlays.add("PauseMenu");
+
+    _scoreText = TextComponent(score.toInt().toString(),
+        textRenderer: TextPaint(
+            config: TextPaintConfig(
+          fontFamily: 'Audiowide-Regular',
+          color: Colors.white,
+        )));
+
     add(_scoreText!);
   }
 
@@ -82,7 +93,7 @@ class MyGame extends BaseGame with TapDetector {
     _scoreText!.text = score.toInt().toString();
 
     components.whereType<Enemy>().forEach((enemy) {
-      if (_dino!.distance(enemy) < 20) {
+      if (_dino!.distance(enemy) < 30) {
         _dino!.hit();
       }
     });

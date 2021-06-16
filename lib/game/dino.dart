@@ -36,7 +36,7 @@ class Dino extends SpriteAnimationComponent {
         spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 17, to: 23);
 
     this.animation = _runAnimation;
-    _timer = Timer(2, callback: () {
+    _timer = Timer(1, callback: () {
       run();
     });
 
@@ -92,7 +92,7 @@ class Dino extends SpriteAnimationComponent {
 
   void jump() {
     if (isOnGround()) {
-      this.speedY = -600;
+      this.speedY = -500;
     }
   }
 }

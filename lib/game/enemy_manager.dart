@@ -45,7 +45,6 @@ class EnemyManager extends Component with HasGameRef<MyGame> {
       _spawnLevel = newSpawnLevel;
 
       var newWaitTime = (4 / (1 + (0.1 * _spawnLevel)));
-      debugPrint(newWaitTime.toString());
 
       _timer!.stop();
       _timer = Timer(newWaitTime, repeat: true, callback: () async {
