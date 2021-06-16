@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the action will run. 
@@ -29,9 +27,8 @@ jobs:
 
         with:
           flutter-version: '2.2.2'
-
-
-      - uses: erickzanardo/flutter-gh-pages@v3
+      - run: flutter pub get
+      - run: flutter build web
 
 
       - run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
