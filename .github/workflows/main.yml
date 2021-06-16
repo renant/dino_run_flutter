@@ -33,6 +33,6 @@ jobs:
 
 
       
-
+      - name: Step 2
       - run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
