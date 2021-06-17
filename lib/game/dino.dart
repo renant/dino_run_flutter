@@ -1,6 +1,8 @@
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
+import 'package:flutter/widgets.dart' hide Image;
+// import 'package:flutter/widgets.dart';
 
 import 'constats.dart';
 
@@ -15,6 +17,8 @@ class Dino extends SpriteAnimationComponent {
 
   double speedY = 0.0;
   double yMax = 0.0;
+
+  ValueNotifier<int>? life;
 
   Dino(Image image) {
     final spriteSheet =
@@ -41,6 +45,8 @@ class Dino extends SpriteAnimationComponent {
     });
 
     this.anchor = Anchor.center;
+
+    life = ValueNotifier(5);
   }
 
   @override
@@ -67,14 +73,22 @@ class Dino extends SpriteAnimationComponent {
     return (this.y >= this.yMax);
   }
 
+  var isRender = false;
+
   @override
   void onGameResize(Vector2 canvasSize) {
     super.onGameResize(canvasSize);
+    if (isRender) {
+      return;
+    }
+
     this.height = this.width = canvasSize[0] / numberOfTilesAlongWidth;
     this.x = this.width;
     this.y =
         canvasSize[1] - groundHeight - (this.height / 2) + dinoTopBottomSpacing;
     this.yMax = this.y;
+
+    isRender = true;
   }
 
   void run() {
@@ -85,6 +99,7 @@ class Dino extends SpriteAnimationComponent {
   void hit() {
     if (!_isHit) {
       this.animation = _hitAnimation;
+      life!.value -= 1;
       _timer!.start();
       _isHit = true;
     }

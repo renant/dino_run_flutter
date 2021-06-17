@@ -76,7 +76,7 @@ class Enemy extends SpriteAnimationComponent {
     );
 
     this.animation = spriteSheet.createAnimation(
-        row: 0, stepTime: 0.1, from: 0, to: _myData!.columns - 1);
+        row: 0, from: 0, to: (_myData!.columns - 1), stepTime: 0.1);
 
     this.anchor = Anchor.center;
   }
@@ -87,9 +87,15 @@ class Enemy extends SpriteAnimationComponent {
     this.x -= _myData!.speed * dt;
   }
 
+  var isRender = false;
+
   @override
   void onGameResize(Vector2 canvasSize) {
     super.onGameResize(canvasSize);
+
+    if (isRender) {
+      return;
+    }
 
     double scaledFactor =
         (canvasSize[0] / numberOfTilesAlongWidth) / _myData!.textureWidth;
@@ -104,8 +110,6 @@ class Enemy extends SpriteAnimationComponent {
       this.y -= this.height;
     }
 
-    if (this.x < (-this.width)) {
-      this.remove();
-    }
+    isRender = true;
   }
 }

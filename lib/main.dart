@@ -1,5 +1,8 @@
 // ignore: import_of_legacy_library_into_null_safe
 
+import 'package:dino_run/widgets/gameover_menu.dart';
+import 'package:dino_run/widgets/hud_game.dart';
+import 'package:dino_run/widgets/pause_menu.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -22,15 +25,21 @@ class AppWidget extends StatelessWidget {
         body: GameWidget<MyGame>(
           game: myGame,
           overlayBuilderMap: {
-            'PauseMenu': (ctx, game) {
-              return IconButton(
-                  icon: Icon(Icons.pause, color: Colors.white, size: 30.0),
-                  onPressed: () {
-                    print("pause");
-                  });
+            'HudGame': (ctx, game) {
+              return HudGame(game: game);
             },
+            'PauseMenu': (ctx, game) {
+              return PauseMenu(game: game);
+            },
+            'GameOverMenu': (ctx, game) {
+              return GameOverMenu(game: game);
+            }
           },
         ),
+      ),
+      theme: ThemeData(
+        fontFamily: 'Audiowide-Regular',
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
     );
   }

@@ -53,4 +53,12 @@ class EnemyManager extends Component with HasGameRef<MyGame> {
       _timer!.start();
     }
   }
+
+  void reset() {
+    _spawnLevel = 0;
+    _timer = Timer(4, repeat: true, callback: () {
+      spawnRandomEnemy();
+    });
+    _timer!.start();
+  }
 }

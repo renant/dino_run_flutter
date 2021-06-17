@@ -16,8 +16,8 @@ const double dinoTopBottomSpacing = 10;
 const double numberOfTilesAlongWidth = 10;
 
 class MyGame extends BaseGame with TapDetector {
-  Dino? _dino;
-  EnemyManager? _enemyManager;
+  Dino? dino;
+  EnemyManager? enemyManager;
   TextComponent? _scoreText;
   double score = 0;
 
@@ -53,14 +53,14 @@ class MyGame extends BaseGame with TapDetector {
     );
     add(parallaxComponent);
 
-    _dino = new Dino(images.fromCache(dinoPng));
+    dino = new Dino(images.fromCache(dinoPng));
 
-    add(_dino!);
+    add(dino!);
 
-    _enemyManager = new EnemyManager();
-    add(_enemyManager!);
+    enemyManager = new EnemyManager();
+    add(enemyManager!);
 
-    overlays.add("PauseMenu");
+    overlays.add("HudGame");
 
     _scoreText = TextComponent(score.toInt().toString(),
         textRenderer: TextPaint(
@@ -81,9 +81,32 @@ class MyGame extends BaseGame with TapDetector {
   }
 
   @override
+  void lifecycleStateChange(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        break;
+      case AppLifecycleState.inactive:
+        pauseGame();
+        break;
+      case AppLifecycleState.paused:
+        pauseGame();
+        break;
+      case AppLifecycleState.detached:
+        pauseGame();
+        break;
+    }
+  }
+
+  void pauseGame() {
+    print('pause');
+    this.pauseEngine();
+    this.overlays.add("PauseMenu");
+  }
+
+  @override
   void onTapDown(TapDownInfo event) {
     super.onTapDown(event);
-    _dino!.jump();
+    dino!.jump();
   }
 
   @override
@@ -93,9 +116,18 @@ class MyGame extends BaseGame with TapDetector {
     _scoreText!.text = score.toInt().toString();
 
     components.whereType<Enemy>().forEach((enemy) {
-      if (_dino!.distance(enemy) < 30) {
-        _dino!.hit();
+      if (dino!.distance(enemy) < 30) {
+        dino!.hit();
       }
     });
+
+    if (dino!.life!.value <= 0) {
+      gameOver();
+    }
+  }
+
+  void gameOver() {
+    this.pauseEngine();
+    this.overlays.add('GameOverMenu');
   }
 }
