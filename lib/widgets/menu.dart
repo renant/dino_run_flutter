@@ -19,14 +19,14 @@ class Menu extends StatelessWidget {
       children: [
         Text(
           'Dino Running',
-          style: TextStyle(fontSize: 60.0, color: Colors.white),
+          style: TextStyle(fontSize: 40.0, color: Colors.white),
         ),
         ElevatedButton(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
           child: Text(
             'Play',
-            style: TextStyle(fontSize: 30.0),
+            style: TextStyle(fontSize: 20.0),
           ),
           onPressed: () {
             Navigator.of(context).pushReplacement(
@@ -41,7 +41,7 @@ class Menu extends StatelessWidget {
               backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
           child: Text(
             'Settings',
-            style: TextStyle(fontSize: 30.0),
+            style: TextStyle(fontSize: 20.0),
           ),
           onPressed: onSettingsPressed,
         )
