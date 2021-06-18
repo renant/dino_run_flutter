@@ -40,7 +40,7 @@ class EnemyManager extends Component with HasGameRef<MyGame> {
   void update(double dt) {
     _timer!.update(dt);
 
-    var newSpawnLevel = (gameRef.score ~/ 500);
+    var newSpawnLevel = (gameRef.score ~/ 350);
     if (_spawnLevel < newSpawnLevel) {
       _spawnLevel = newSpawnLevel;
 
