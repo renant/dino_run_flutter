@@ -1,3 +1,4 @@
+import 'package:dino_run/game/audio_manager.dart';
 import 'package:dino_run/game/enemy.dart';
 import 'package:dino_run/screens/main_menu.dart';
 import 'package:flutter/material.dart';
@@ -82,18 +83,6 @@ class GameOverMenu extends StatelessWidget {
   }
 
   void resetGame() {
-    this.game.score = 0;
-    this.game.dino!.run();
-    this.game.dino!.life!.value = 5;
-    this.game.enemyManager!.reset();
-    game.overlays.remove("GameOverMenu");
-    game.resumeEngine();
-    this.game.dino!.run();
-
-    this
-        .game
-        .components
-        .whereType<Enemy>()
-        .forEach((enemy) => {this.game.remove(enemy)});
+    this.game.resetGame();
   }
 }

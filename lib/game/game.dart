@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:dino_run/game/audio_manager.dart';
 import 'package:dino_run/game/enemy_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -7,6 +9,7 @@ import 'package:flame/gestures.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
 
+import 'audio_manager.dart';
 import 'constats.dart';
 import 'dino.dart';
 import 'enemy.dart';
@@ -20,6 +23,10 @@ class MyGame extends BaseGame with TapDetector {
   EnemyManager? enemyManager;
   TextComponent? _scoreText;
   double score = 0;
+  double _elapsedTime = 0.0;
+
+  bool _isGameOver = false;
+  bool _isGamePaused = false;
 
   @override
   Future<void> onLoad() async {
@@ -70,6 +77,8 @@ class MyGame extends BaseGame with TapDetector {
         )));
 
     add(_scoreText!);
+
+    AudioManager.instance.startBgm();
   }
 
   @override
@@ -98,22 +107,32 @@ class MyGame extends BaseGame with TapDetector {
   }
 
   void pauseGame() {
-    print('pause');
-    this.pauseEngine();
-    this.overlays.add("PauseMenu");
+    if (_isGameOver) {
+      AudioManager.instance.pauseBgm();
+      this.pauseEngine();
+      this._isGamePaused = true;
+      this.overlays.add("PauseMenu");
+    }
   }
 
   @override
   void onTapDown(TapDownInfo event) {
     super.onTapDown(event);
-    dino!.jump();
+
+    if (!_isGameOver && !_isGamePaused) {
+      dino!.jump();
+    }
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    score += 60 * dt;
-    _scoreText!.text = score.toInt().toString();
+
+    _elapsedTime += dt;
+    if (_elapsedTime > (1 / 60)) {
+      score += 1;
+      _scoreText!.text = score.toInt().toString();
+    }
 
     components.whereType<Enemy>().forEach((enemy) {
       if (dino!.distance(enemy) < 30) {
@@ -127,7 +146,35 @@ class MyGame extends BaseGame with TapDetector {
   }
 
   void gameOver() {
+    _isGameOver = true;
+    AudioManager.instance.stopBgm();
     this.pauseEngine();
     this.overlays.add('GameOverMenu');
+  }
+
+  void resetGame() {
+    score = 0;
+    dino!.run();
+    dino!.life!.value = 5;
+    enemyManager!.reset();
+    overlays.remove("GameOverMenu");
+    resumeEngine();
+    _isGameOver = false;
+    AudioManager.instance.resumeBgm();
+
+    components.whereType<Enemy>().forEach((enemy) => {remove(enemy)});
+  }
+
+  void resumeGame() {
+    _isGamePaused = false;
+    AudioManager.instance.resumeBgm();
+    resumeEngine();
+    overlays.remove("PauseMenu");
+  }
+
+  @override
+  void onDetach() {
+    AudioManager.instance.stopBgm();
+    super.onDetach();
   }
 }

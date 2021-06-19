@@ -1,3 +1,4 @@
+import 'package:dino_run/game/audio_manager.dart';
 import 'package:dino_run/screens/main_menu.dart';
 import 'package:flutter/material.dart';
 
@@ -78,7 +79,6 @@ class PauseMenu extends StatelessWidget {
   }
 
   void resumeGame() {
-    game.resumeEngine();
-    game.overlays.remove("PauseMenu");
+    game.resumeGame();
   }
 }

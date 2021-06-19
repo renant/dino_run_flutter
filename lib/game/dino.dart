@@ -4,6 +4,7 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/widgets.dart' hide Image;
 // import 'package:flutter/widgets.dart';
 
+import 'audio_manager.dart';
 import 'constats.dart';
 
 class Dino extends SpriteAnimationComponent {
@@ -100,6 +101,7 @@ class Dino extends SpriteAnimationComponent {
     if (!_isHit) {
       this.animation = _hitAnimation;
       life!.value -= 1;
+      AudioManager.instance.playSfx('hurt7.wav');
       _timer!.start();
       _isHit = true;
     }
@@ -108,6 +110,7 @@ class Dino extends SpriteAnimationComponent {
   void jump() {
     if (isOnGround()) {
       this.speedY = -500;
+      AudioManager.instance.playSfx('jump14.wav');
     }
   }
 }

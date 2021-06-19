@@ -36,6 +36,7 @@ class Menu extends StatelessWidget {
             );
           },
         ),
+        SizedBox(height: 10),
         ElevatedButton(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
