@@ -107,7 +107,7 @@ class MyGame extends BaseGame with TapDetector {
   }
 
   void pauseGame() {
-    if (_isGameOver) {
+    if (!_isGameOver) {
       AudioManager.instance.pauseBgm();
       this.pauseEngine();
       this._isGamePaused = true;
