@@ -46,7 +46,7 @@ class AudioManager {
 
   void startBgm() {
     if (_bgm!.value) {
-      FlameAudio.bgm.play('8Bit Platformer Loop.wav', volume: 0.4);
+      FlameAudio.bgm.play('bgloop.wav', volume: 0.4);
     }
   }
 
