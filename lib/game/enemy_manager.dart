@@ -15,9 +15,10 @@ class EnemyManager extends Component with HasGameRef<MyGame> {
 
   EnemyManager() {
     _random = Random();
-    _timer = Timer(4, repeat: true, callback: () async {
+    _timer = Timer(3, repeat: true, callback: () async {
       spawnRandomEnemy();
     });
+    _timer!.start();
   }
 
   spawnRandomEnemy() {
@@ -40,11 +41,11 @@ class EnemyManager extends Component with HasGameRef<MyGame> {
   void update(double dt) {
     _timer!.update(dt);
 
-    var newSpawnLevel = (gameRef.score ~/ 250);
+    var newSpawnLevel = (gameRef.score ~/ 500);
     if (_spawnLevel < newSpawnLevel) {
       _spawnLevel = newSpawnLevel;
 
-      var newWaitTime = (4 / (1 + (0.1 * _spawnLevel)));
+      var newWaitTime = (3 / (1 + (0.1 * _spawnLevel)));
 
       _timer!.stop();
       _timer = Timer(newWaitTime, repeat: true, callback: () async {
