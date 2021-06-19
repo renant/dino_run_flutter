@@ -10,7 +10,7 @@ class AudioManager {
   static AudioManager get instance => _instance;
 
   Future<void> init() async {
-    // FlameAudio.bgm.initialize();
+    FlameAudio.bgm.initialize();
     // FlameAudio.bgm.play('bgloop.wav', volume: 0.50);
 
     settings = await Hive.openBox("settings");
