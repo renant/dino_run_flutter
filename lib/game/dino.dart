@@ -20,6 +20,7 @@ class Dino extends SpriteAnimationComponent {
   double yMax = 0.0;
 
   ValueNotifier<int>? life;
+  ValueNotifier<int>? coins;
 
   Dino(Image image) {
     final spriteSheet =
@@ -48,6 +49,7 @@ class Dino extends SpriteAnimationComponent {
     this.anchor = Anchor.center;
 
     life = ValueNotifier(5);
+    coins = ValueNotifier(0);
   }
 
   @override
@@ -105,6 +107,11 @@ class Dino extends SpriteAnimationComponent {
       _timer!.start();
       _isHit = true;
     }
+  }
+
+  void getCoin() {
+    AudioManager.instance.playSfx("coin.mp3");
+    coins!.value += 1;
   }
 
   void jump() {

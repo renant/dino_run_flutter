@@ -107,7 +107,7 @@ class Enemy extends SpriteAnimationComponent {
     this.y = canvasSize[1] - groundHeight - (this.height / 2);
 
     if (_myData!.canFly && _random.nextBool()) {
-      this.y -= this.height;
+      this.y -= _random.nextInt((this.height * 2).toInt());
     }
 
     isRender = true;

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:dino_run/game/audio_manager.dart';
-import 'package:dino_run/game/enemy_manager.dart';
+import 'package:dino_run/game/state_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
@@ -10,6 +10,7 @@ import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
 
 import 'audio_manager.dart';
+import 'coin.dart';
 import 'constats.dart';
 import 'dino.dart';
 import 'enemy.dart';
@@ -20,8 +21,9 @@ const double numberOfTilesAlongWidth = 10;
 
 class MyGame extends BaseGame with TapDetector {
   Dino? dino;
-  EnemyManager? enemyManager;
+  StateManager? stateManager;
   TextComponent? _scoreText;
+  Coin? _coinTest;
   double score = 0;
   double _elapsedTime = 0.0;
 
@@ -35,6 +37,9 @@ class MyGame extends BaseGame with TapDetector {
     await images.load(angryPigRedPng);
     await images.load(batPng);
     await images.load(rinoPng);
+
+    await Future.forEach(
+        coinImages, (String coinImage) async => await images.load(coinImage));
 
     final parallaxImages = [
       loadParallaxImage('parallax/plx-1.png'),
@@ -64,8 +69,8 @@ class MyGame extends BaseGame with TapDetector {
 
     add(dino!);
 
-    enemyManager = new EnemyManager();
-    add(enemyManager!);
+    stateManager = new StateManager();
+    add(stateManager!);
 
     overlays.add("HudGame");
 
@@ -86,7 +91,7 @@ class MyGame extends BaseGame with TapDetector {
     super.onResize(canvasSize);
 
     _scoreText?.x = (canvasSize[0] / 2) - (_scoreText!.width / 2);
-    _scoreText?.y = canvasSize[1] - (canvasSize[1] + _scoreText!.height - 20);
+    _scoreText?.y = canvasSize[1] - (canvasSize[1] + _scoreText!.height - 50);
   }
 
   @override
@@ -134,9 +139,18 @@ class MyGame extends BaseGame with TapDetector {
       _scoreText!.text = score.toInt().toString();
     }
 
+    //enemy colission
     components.whereType<Enemy>().forEach((enemy) {
-      if (dino!.distance(enemy) < 30) {
+      if (dino!.distance(enemy) < 35) {
         dino!.hit();
+      }
+    });
+
+    //get coin
+    components.whereType<Coin>().forEach((coin) {
+      if (dino!.distance(coin) < 25) {
+        dino!.getCoin();
+        remove(coin);
       }
     });
 
@@ -156,7 +170,7 @@ class MyGame extends BaseGame with TapDetector {
     score = 0;
     dino!.run();
     dino!.life!.value = 5;
-    enemyManager!.reset();
+    stateManager!.reset();
     overlays.remove("GameOverMenu");
     resumeEngine();
     _isGameOver = false;
