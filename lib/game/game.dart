@@ -165,6 +165,7 @@ class MyGame extends BaseGame with TapDetector {
 
   void gameOver() {
     _isGameOver = true;
+    StoreManager.instance.addCoins(dino!.coins!.value);
     AudioManager.instance.stopBgm();
     this.pauseEngine();
     this.overlays.add('GameOverMenu');
@@ -173,7 +174,8 @@ class MyGame extends BaseGame with TapDetector {
   void resetGame() {
     score = 0;
     dino!.run();
-    dino!.life!.value = 5;
+    dino!.coins!.value = 0;
+    dino!.life!.value = StoreManager.instance.totalLifes!;
     stateManager!.reset();
     overlays.remove("GameOverMenu");
     resumeEngine();

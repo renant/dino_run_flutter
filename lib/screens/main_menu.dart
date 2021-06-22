@@ -39,7 +39,7 @@ class _MainMenuState extends State<MainMenu> {
             color: Colors.black.withOpacity(0.4),
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 100.0, vertical: 50.0),
+                  const EdgeInsets.symmetric(horizontal: 90.0, vertical: 30.0),
               child: showOptions(),
             ),
             key: new ValueKey<String>(_menuOpt),

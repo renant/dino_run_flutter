@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dino_run/game/store_manager.dart';
+import 'package:dino_run/models/dino_store.dart';
 import 'package:flutter/material.dart';
 
 class Store extends StatefulWidget {
@@ -27,48 +28,44 @@ class _StoreState extends State<Store> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset('assets/images/coin/Gold_1.png', width: 25),
-              SizedBox(
-                width: 10,
-              ),
+              createPurchaseLifes(),
               ValueListenableBuilder(
                   valueListenable: StoreManager.instance.listenableCoins!,
                   builder: (context, int value, child) {
-                    return Text(value.toString(),
-                        style: TextStyle(fontSize: 25, color: Colors.white));
+                    return Row(
+                      children: [
+                        Image.asset('assets/images/coin/Gold_1.png', width: 25),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(value.toString(),
+                            style:
+                                TextStyle(fontSize: 25, color: Colors.white)),
+                      ],
+                    );
                   }),
             ],
           ),
-          createPurchaseLifes(),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_left),
-                iconSize: 42,
-                color: Colors.white,
-                onPressed: () => _controller.previousPage(),
-              ),
-              Container(
-                width: 200,
-                height: 100,
-                child: CarouselSlider(
-                  items: listDinos(),
-                  options: CarouselOptions(),
-                  carouselController: _controller,
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_right),
-                iconSize: 42,
-                color: Colors.white,
-                onPressed: () => _controller.nextPage(),
-              ),
-            ],
+          SizedBox(
+            height: 10,
           ),
+          Text('Select your Dino!',
+              style: TextStyle(fontSize: 25, color: Colors.white)),
+          SizedBox(
+            height: 10,
+          ),
+          ValueListenableBuilder(
+              valueListenable: StoreManager.instance.listenableDinos!,
+              builder: (context, List<DinoStore> dinos, child) {
+                return Container(
+                    height: 120,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: listDinos(dinos),
+                    ));
+              }),
           ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
@@ -102,46 +99,108 @@ class _StoreState extends State<Store> {
     );
   }
 
-  List<Widget> listDinos() {
-    return [
-      Container(
-        child: Image.asset('assets/images/dinoGreen.gif'),
+  List<Widget> listDinos(List<DinoStore> dinos) {
+    return dinos.map((dino) {
+      return createDino(dino);
+    }).toList();
+  }
+
+  Widget createDino(DinoStore dino) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        children: [
+          Container(
+            child: Image.asset(dino.asset),
+          ),
+          dino.isPurchased
+              ? Text(
+                  'Acquired',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                )
+              : Row(
+                  children: [
+                    SizedBox(width: 5),
+                    Image.asset('assets/images/coin/Gold_1.png', width: 10),
+                    SizedBox(width: 5),
+                    Text(
+                      dino.price.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ],
+                ),
+          ValueListenableBuilder(
+              valueListenable: StoreManager.instance.listenableCoins!,
+              builder: (context, int currentCoins, child) {
+                return ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                      dino.isPurchased
+                          ? (dino.isSelected
+                              ? Colors.greenAccent
+                              : Colors.lightBlue)
+                          : dino.price > currentCoins
+                              ? Colors.grey.shade200
+                              : Colors.yellow.shade600,
+                    )),
+                    child: Text(
+                      dino.isPurchased
+                          ? (dino.isSelected ? "Selected" : "Select")
+                          : 'Purchase',
+                      style: TextStyle(fontSize: 10.0, color: Colors.black87),
+                    ),
+                    onPressed: dino.isPurchased
+                        ? (dino.isSelected
+                            ? null
+                            : () {
+                                StoreManager.instance.selectDino(dino);
+                              })
+                        : (dino.price > currentCoins
+                            ? null
+                            : () {
+                                StoreManager.instance.purchaseDino(dino);
+                              }));
+              }),
+        ],
       ),
-      Container(
-        child: Image.asset('assets/images/dinoYellow.gif'),
-      ),
-      Container(
-        child: Image.asset('assets/images/dinoBlue.gif'),
-      ),
-      Container(
-        child: Image.asset('assets/images/dinoRed.gif'),
-      )
-    ];
+    );
   }
 
   createPurchaseLifes() {
     return ValueListenableBuilder(
         valueListenable: StoreManager.instance.listenableLifes!,
         builder: (context, int currentLifes, child) {
+          var price = 25;
+          if (currentLifes == 4) {
+            price = 50;
+          }
+          if (currentLifes == 5) {
+            price = 100;
+          }
+
           return Row(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Get a extra life ',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Image.asset('assets/images/coin/Gold_1.png', width: 10),
-                      SizedBox(width: 5),
-                      Text(
-                        '25',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
-                  ),
+                  currentLifes != 6
+                      ? Row(
+                          children: [
+                            Text(
+                              'Get a extra life ',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Image.asset('assets/images/coin/Gold_1.png',
+                                width: 10),
+                            SizedBox(width: 5),
+                            Text(
+                              price.toString(),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          ],
+                        )
+                      : Container(),
                   SizedBox(height: 5),
                   createLifeList(currentLifes)
                 ],
@@ -149,18 +208,27 @@ class _StoreState extends State<Store> {
               SizedBox(
                 width: 10,
               ),
-              ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          currentLifes == 6
-                              ? Colors.red.shade600
-                              : Colors.yellow.shade600)),
-                  child: Text(
-                    currentLifes == 6 ? 'MAX' : 'Purchase',
-                    style: TextStyle(fontSize: 16.0, color: Colors.black87),
-                  ),
-                  onPressed: () {
-                    print('Purchase');
+              ValueListenableBuilder(
+                  valueListenable: StoreManager.instance.listenableCoins!,
+                  builder: (context, int currentCoins, child) {
+                    return ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                currentLifes == 6
+                                    ? Colors.red.shade600
+                                    : (price > currentCoins
+                                        ? Colors.grey.shade200
+                                        : Colors.yellow.shade600))),
+                        child: Text(
+                          currentLifes == 6 ? 'MAX' : 'Purchase',
+                          style:
+                              TextStyle(fontSize: 10.0, color: Colors.black87),
+                        ),
+                        onPressed: currentLifes == 6 || price > currentCoins
+                            ? null
+                            : () {
+                                StoreManager.instance.purchaseExtraLife(price);
+                              });
                   }),
             ],
           );
