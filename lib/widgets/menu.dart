@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 /// with play and settings buttons.
 class Menu extends StatelessWidget {
   final Function()? onSettingsPressed;
+  final Function()? onStorePressed;
 
   const Menu({
     Key? key,
     required this.onSettingsPressed,
+    required this.onStorePressed,
   }) : super(key: key);
 
   @override
@@ -35,6 +37,16 @@ class Menu extends StatelessWidget {
               ),
             );
           },
+        ),
+        SizedBox(height: 10),
+        ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
+          child: Text(
+            'Store',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          onPressed: onStorePressed,
         ),
         SizedBox(height: 10),
         ElevatedButton(

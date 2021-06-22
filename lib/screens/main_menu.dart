@@ -1,5 +1,6 @@
 import 'package:dino_run/widgets/menu.dart';
 import 'package:dino_run/widgets/settings.dart';
+import 'package:dino_run/widgets/store.dart';
 import 'package:flutter/material.dart';
 
 class MainMenu extends StatefulWidget {
@@ -10,12 +11,11 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-  ValueNotifier<CrossFadeState>? _crossFadeStateNotifier;
+  String _menuOpt = 'Menu';
 
   @override
   void initState() {
     super.initState();
-    _crossFadeStateNotifier = ValueNotifier(CrossFadeState.showFirst);
   }
 
   @override
@@ -30,7 +30,8 @@ class _MainMenuState extends State<MainMenu> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
@@ -39,34 +40,49 @@ class _MainMenuState extends State<MainMenu> {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 100.0, vertical: 50.0),
-              child: ValueListenableBuilder(
-                valueListenable: _crossFadeStateNotifier!,
-                builder: (context, CrossFadeState value, child) {
-                  return AnimatedCrossFade(
-                    crossFadeState: value,
-                    duration: Duration(milliseconds: 300),
-                    firstChild: Menu(
-                      onSettingsPressed: showSettings,
-                    ),
-                    secondChild: Settings(
-                      onBackPressed: showMenu,
-                    ),
-                  );
-                },
-              ),
+              child: showOptions(),
             ),
+            key: new ValueKey<String>(_menuOpt),
           ),
         ),
       ),
     );
   }
 
-  void showMenu() {
-    _crossFadeStateNotifier!.value = CrossFadeState.showFirst;
+  showOptions() {
+    if (_menuOpt == 'Menu') {
+      return Menu(
+        onSettingsPressed: showSettings,
+        onStorePressed: showStore,
+      );
+    }
+    if (_menuOpt == 'Settings') {
+      return Settings(
+        onBackPressed: showMenu,
+      );
+    }
+    if (_menuOpt == 'Store') {
+      return Store(
+        onBackPressed: showMenu,
+      );
+    }
   }
 
-  /// When called will change the current menu to [Settings].
+  void showMenu() {
+    setState(() {
+      _menuOpt = 'Menu';
+    });
+  }
+
   void showSettings() {
-    _crossFadeStateNotifier!.value = CrossFadeState.showSecond;
+    setState(() {
+      _menuOpt = 'Settings';
+    });
+  }
+
+  void showStore() {
+    setState(() {
+      _menuOpt = 'Store';
+    });
   }
 }

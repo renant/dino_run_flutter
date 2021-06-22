@@ -1,3 +1,5 @@
+import 'package:dino_run/game/store_manager.dart';
+import 'package:flame/assets.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
@@ -7,12 +9,36 @@ import 'package:flutter/widgets.dart' hide Image;
 import 'audio_manager.dart';
 import 'constats.dart';
 
+enum DinoType { Blue, Green, Red, Yellow }
+
+class DinoData {
+  final String image;
+
+  DinoData({
+    required this.image,
+  });
+}
+
 class Dino extends SpriteAnimationComponent {
-  SpriteAnimation? _idleAnimation;
+  DinoData? _myData;
+
+  static Map<DinoType, DinoData> _dinoDetails = {
+    DinoType.Blue: DinoData(
+      image: dinoBluePng,
+    ),
+    DinoType.Red: DinoData(
+      image: dinoRedPng,
+    ),
+    DinoType.Yellow: DinoData(
+      image: dinoYellowPng,
+    ),
+    DinoType.Green: DinoData(
+      image: dinoGreenPng,
+    )
+  };
+
   SpriteAnimation? _runAnimation;
-  SpriteAnimation? _kickAnimation;
   SpriteAnimation? _hitAnimation;
-  SpriteAnimation? _sprintAnimation;
   Timer? _timer;
   bool _isHit = false;
 
@@ -22,24 +48,16 @@ class Dino extends SpriteAnimationComponent {
   ValueNotifier<int>? life;
   ValueNotifier<int>? coins;
 
-  Dino(Image image) {
-    final spriteSheet =
-        SpriteSheet.fromColumnsAndRows(image: image, columns: 24, rows: 1);
-
-    _idleAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 0, to: 3);
+  Dino(DinoType type, Images images) {
+    _myData = _dinoDetails[type];
+    final spriteSheet = SpriteSheet.fromColumnsAndRows(
+        image: images.fromCache(_myData!.image), columns: 24, rows: 1);
 
     _runAnimation =
         spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 4, to: 10);
 
-    _kickAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 11, to: 13);
-
     _hitAnimation =
         spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 14, to: 16);
-
-    _sprintAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 17, to: 23);
 
     this.animation = _runAnimation;
     _timer = Timer(1, callback: () {
@@ -48,7 +66,7 @@ class Dino extends SpriteAnimationComponent {
 
     this.anchor = Anchor.center;
 
-    life = ValueNotifier(5);
+    life = ValueNotifier(StoreManager.instance.totalLifes!);
     coins = ValueNotifier(0);
   }
 

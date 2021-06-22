@@ -4,6 +4,12 @@ const double numberOfTilesAlongWidth = 10;
 const double GRAVITY = 1000;
 
 const dinoPng = 'dino.png';
+
+const dinoBluePng = 'dinoBlue.png';
+const dinoGreenPng = 'dinoGreen.png';
+const dinoRedPng = 'dinoRed.png';
+const dinoYellowPng = 'dinoYellow.png';
+
 const angryPigGreenPng = 'AngryPig/Walk (36x30).png';
 const angryPigRedPng = 'AngryPig/Run (36x30).png';
 const batPng = 'Bat/Flying (46x30).png';

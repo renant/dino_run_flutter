@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:dino_run/game/audio_manager.dart';
 import 'package:dino_run/game/state_manager.dart';
+import 'package:dino_run/game/store_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
@@ -32,7 +33,10 @@ class MyGame extends BaseGame with TapDetector {
 
   @override
   Future<void> onLoad() async {
-    await images.load(dinoPng);
+    await images.load(dinoBluePng);
+    await images.load(dinoRedPng);
+    await images.load(dinoGreenPng);
+    await images.load(dinoYellowPng);
     await images.load(angryPigGreenPng);
     await images.load(angryPigRedPng);
     await images.load(batPng);
@@ -65,7 +69,7 @@ class MyGame extends BaseGame with TapDetector {
     );
     add(parallaxComponent);
 
-    dino = new Dino(images.fromCache(dinoPng));
+    dino = new Dino(StoreManager.instance.selectedDino, images);
 
     add(dino!);
 

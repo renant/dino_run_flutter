@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
+import 'dino.dart';
+
 class StoreManager {
   StoreManager._internal();
 
@@ -19,6 +21,10 @@ class StoreManager {
       store!.put('coins', 0);
     }
 
+    if (store!.get('selectedDino') == null) {
+      store!.put('selectedDino', DinoType.Green.index);
+    }
+
     _lifes = ValueNotifier(store!.get('lifes'));
     _coins = ValueNotifier(store!.get('coins'));
   }
@@ -27,6 +33,7 @@ class StoreManager {
 
   ValueNotifier<int>? _lifes;
   int? get totalLifes => _lifes!.value;
+  ValueNotifier<int>? get listenableLifes => _lifes;
   void setLifes(int lifes) {
     store!.put('lifes', lifes);
     _lifes!.value = lifes;
@@ -37,5 +44,11 @@ class StoreManager {
   void setCoins(int coins) {
     store!.put('coins', coins);
     _coins!.value = coins;
+  }
+
+  DinoType get selectedDino => DinoType.values[store!.get('selectedDino')];
+
+  void setSelectedDino(DinoType value) {
+    store!.put('selectedDino', value);
   }
 }
