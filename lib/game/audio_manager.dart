@@ -75,8 +75,6 @@ class AudioManager {
   void playSfx(String fileName) {
     if (_sfx!.value) {
       FlameAudio.audioCache.play(fileName, volume: 1);
-
-      // FlameAudio.play(fileName);
     }
   }
 }

@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'game/audio_manager.dart';
+import 'game/store_manager.dart';
 import 'screens/main_menu.dart';
 
 void main() async {
@@ -24,6 +25,7 @@ void main() async {
   }
 
   await AudioManager.instance.init();
+  await StoreManager.instance.init();
 
   runApp(AppWidget());
 }
