@@ -1,3 +1,4 @@
+import 'package:dino_run/widgets/credits.dart';
 import 'package:dino_run/widgets/menu.dart';
 import 'package:dino_run/widgets/settings.dart';
 import 'package:dino_run/widgets/store.dart';
@@ -54,6 +55,7 @@ class _MainMenuState extends State<MainMenu> {
       return Menu(
         onSettingsPressed: showSettings,
         onStorePressed: showStore,
+        onCreditsPressed: showCredits,
       );
     }
     if (_menuOpt == 'Settings') {
@@ -63,6 +65,11 @@ class _MainMenuState extends State<MainMenu> {
     }
     if (_menuOpt == 'Store') {
       return Store(
+        onBackPressed: showMenu,
+      );
+    }
+    if (_menuOpt == 'Credits') {
+      return Credits(
         onBackPressed: showMenu,
       );
     }
@@ -83,6 +90,12 @@ class _MainMenuState extends State<MainMenu> {
   void showStore() {
     setState(() {
       _menuOpt = 'Store';
+    });
+  }
+
+  void showCredits() {
+    setState(() {
+      _menuOpt = 'Credits';
     });
   }
 }
