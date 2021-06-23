@@ -1,3 +1,4 @@
+import 'package:dino_run/game/store_manager.dart';
 import 'package:dino_run/screens/game_play.dart';
 import 'package:flutter/material.dart';
 
@@ -41,35 +42,48 @@ class Menu extends StatelessWidget {
           },
         ),
         SizedBox(height: 10),
-        ElevatedButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
-          child: Text(
-            'Store',
-            style: TextStyle(fontSize: 20.0),
-          ),
-          onPressed: onStorePressed,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(width: 10),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
+              child: Text(
+                'Store',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              onPressed: onStorePressed,
+            ),
+            SizedBox(width: 10),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
+              child: Text(
+                'Settings',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              onPressed: onSettingsPressed,
+            ),
+            SizedBox(width: 10),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
+              child: Text(
+                'Credits',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              onPressed: onCreditsPressed,
+            )
+          ],
         ),
         SizedBox(height: 10),
-        ElevatedButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
-          child: Text(
-            'Settings',
-            style: TextStyle(fontSize: 20.0),
-          ),
-          onPressed: onSettingsPressed,
-        ),
-        SizedBox(height: 10),
-        ElevatedButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
-          child: Text(
-            'Credits',
-            style: TextStyle(fontSize: 20.0),
-          ),
-          onPressed: onCreditsPressed,
-        )
+        StoreManager.instance.highestScore! > 0
+            ? Text(
+                'Best Score: ${StoreManager.instance.highestScore!}',
+                style: TextStyle(fontSize: 20.0, color: Colors.white),
+              )
+            : Container()
       ],
     );
   }

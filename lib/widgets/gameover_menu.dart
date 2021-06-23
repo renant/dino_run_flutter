@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dino_run/ads/ad_state.dart';
 import 'package:dino_run/game/audio_manager.dart';
 import 'package:dino_run/game/enemy.dart';
+import 'package:dino_run/game/store_manager.dart';
 import 'package:dino_run/screens/main_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,11 @@ class _GameOverMenuState extends State<GameOverMenu> {
               Text('Game Over',
                   style: TextStyle(fontSize: 30, color: Colors.white)),
               SizedBox(height: 10),
-              Text('Your Score was ${widget.game.score.toInt()}',
+              Text(
+                  widget.game.score.toInt() <
+                          StoreManager.instance.highestScore!
+                      ? 'Your Score was ${widget.game.score.toInt()}'
+                      : 'New High Score! Your Score was ${StoreManager.instance.highestScore!}',
                   style: TextStyle(fontSize: 30, color: Colors.white)),
               SizedBox(height: 10),
               Column(

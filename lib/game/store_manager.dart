@@ -28,6 +28,10 @@ class StoreManager {
       store!.put('selectedDino', DinoType.Green.index);
     }
 
+    if (store!.get('score') == null) {
+      store!.put('score', 0);
+    }
+
     if (dinos!.get('dinoGreen') == null) {
       dinos!.put(
         'dinoGreen',
@@ -90,6 +94,7 @@ class StoreManager {
 
     _lifes = ValueNotifier(store!.get('lifes'));
     _coins = ValueNotifier(store!.get('coins'));
+    _score = ValueNotifier(store!.get('score'));
     _dinos = ValueNotifier(getAllDinos());
   }
 
@@ -111,6 +116,16 @@ class StoreManager {
   void setLifes(int lifes) {
     store!.put('lifes', lifes);
     _lifes!.value = lifes;
+  }
+
+  ValueNotifier<int>? _score;
+  int? get highestScore => _score!.value;
+  ValueNotifier<int>? get listenableScore => _score;
+  void setHighScore(int score) {
+    if (score > highestScore!) {
+      store!.put('score', score);
+      _score!.value = score;
+    }
   }
 
   ValueNotifier<int>? _coins;

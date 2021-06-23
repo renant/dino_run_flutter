@@ -164,6 +164,7 @@ class MyGame extends BaseGame with TapDetector {
   }
 
   void gameOver() {
+    StoreManager.instance.setHighScore(score.toInt());
     _isGameOver = true;
     StoreManager.instance.addCoins(dino!.coins!.value);
     AudioManager.instance.stopBgm();
