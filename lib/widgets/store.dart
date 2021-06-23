@@ -1,5 +1,3 @@
-import 'package:carousel_slider/carousel_controller.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dino_run/game/store_manager.dart';
 import 'package:dino_run/models/dino_store.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +15,6 @@ class Store extends StatefulWidget {
 }
 
 class _StoreState extends State<Store> {
-  final CarouselController _controller = CarouselController();
-
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dino_run">
    <application
-        android:label="dino_run"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Dino Running!"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -37,5 +37,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9729996201347510~5259208457"/>
     </application>
 </manifest>
