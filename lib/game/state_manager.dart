@@ -5,18 +5,19 @@ import 'package:flame/assets.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/foundation.dart';
 
+import 'coin.dart';
 import 'enemy.dart';
 import 'game.dart';
 
-class EnemyManager extends Component with HasGameRef<MyGame> {
+class StateManager extends Component with HasGameRef<MyGame> {
   Random? _random;
   Timer? _timer;
   int _spawnLevel = 0;
 
-  EnemyManager() {
+  StateManager() {
     _random = Random();
     _timer = Timer(3, repeat: true, callback: () async {
-      spawnRandomEnemy();
+      spawn();
     });
     _timer!.start();
   }
@@ -28,14 +29,26 @@ class EnemyManager extends Component with HasGameRef<MyGame> {
     gameRef.add(newEnemy);
   }
 
+  spawnCoin() {
+    final coin = new Coin(gameRef.images);
+    gameRef.add(coin);
+  }
+
+  spawn() {
+    final randonSpawnCoin = _random!.nextInt(5);
+
+    if (randonSpawnCoin == 4) {
+      spawnCoin();
+    } else {
+      spawnRandomEnemy();
+    }
+  }
+
   @override
   void onMount() {
     super.onMount();
     _timer!.start();
   }
-
-  // @override
-  // void render(Canvas c) {}
 
   @override
   void update(double dt) {
@@ -49,7 +62,7 @@ class EnemyManager extends Component with HasGameRef<MyGame> {
 
       _timer!.stop();
       _timer = Timer(newWaitTime, repeat: true, callback: () async {
-        spawnRandomEnemy();
+        spawn();
       });
       _timer!.start();
     }
@@ -58,7 +71,7 @@ class EnemyManager extends Component with HasGameRef<MyGame> {
   void reset() {
     _spawnLevel = 0;
     _timer = Timer(4, repeat: true, callback: () {
-      spawnRandomEnemy();
+      spawn();
     });
     _timer!.start();
   }

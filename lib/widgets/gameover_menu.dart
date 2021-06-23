@@ -1,17 +1,48 @@
+import 'dart:io';
+
+import 'package:dino_run/ads/ad_state.dart';
 import 'package:dino_run/game/audio_manager.dart';
 import 'package:dino_run/game/enemy.dart';
 import 'package:dino_run/screens/main_menu.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dino_run/game/game.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-class GameOverMenu extends StatelessWidget {
+class GameOverMenu extends StatefulWidget {
   final MyGame game;
 
   const GameOverMenu({
     Key? key,
     required this.game,
   }) : super(key: key);
+
+  @override
+  _GameOverMenuState createState() => _GameOverMenuState();
+}
+
+class _GameOverMenuState extends State<GameOverMenu> {
+  BannerAd? banner;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!kIsWeb) {
+      if (Platform.isAndroid || Platform.isIOS) {
+        AdState.instance.initializations!.then((status) => {
+              setState(() {
+                banner = BannerAd(
+                  adUnitId: AdState.instance.bannerAdUntil,
+                  size: AdSize.banner,
+                  request: AdRequest(),
+                  listener: AdState.instance.adListener,
+                )..load();
+              })
+            });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +61,7 @@ class GameOverMenu extends StatelessWidget {
               Text('Game Over',
                   style: TextStyle(fontSize: 30, color: Colors.white)),
               SizedBox(height: 10),
-              Text('Your Score was ${game.score.toInt()}',
+              Text('Your Score was ${widget.game.score.toInt()}',
                   style: TextStyle(fontSize: 30, color: Colors.white)),
               SizedBox(height: 10),
               Column(
@@ -73,6 +104,23 @@ class GameOverMenu extends StatelessWidget {
                       );
                     },
                   ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        banner == null
+                            ? SizedBox(height: 50)
+                            : Container(
+                                height: 50,
+                                width: MediaQuery.of(context).size.width,
+                                child: AdWidget(
+                                  ad: banner!,
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
                 ],
               )
             ],
@@ -83,6 +131,6 @@ class GameOverMenu extends StatelessWidget {
   }
 
   void resetGame() {
-    this.game.resetGame();
+    this.widget.game.resetGame();
   }
 }
