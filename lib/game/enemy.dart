@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flame/assets.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 
 import 'constats.dart';

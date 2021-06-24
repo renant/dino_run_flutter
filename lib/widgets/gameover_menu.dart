@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:dino_run/ads/ad_state.dart';
-import 'package:dino_run/game/audio_manager.dart';
-import 'package:dino_run/game/enemy.dart';
 import 'package:dino_run/game/store_manager.dart';
 import 'package:dino_run/screens/main_menu.dart';
 import 'package:flutter/foundation.dart';

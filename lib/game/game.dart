@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:dino_run/game/audio_manager.dart';
@@ -24,7 +23,6 @@ class MyGame extends BaseGame with TapDetector {
   Dino? dino;
   StateManager? stateManager;
   TextComponent? _scoreText;
-  Coin? _coinTest;
   double score = 0;
   double _elapsedTime = 0.0;
 
