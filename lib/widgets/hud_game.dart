@@ -1,4 +1,3 @@
-import 'package:dino_run/game/constats.dart';
 import 'package:dino_run/game/store_manager.dart';
 import 'package:flutter/material.dart';
 

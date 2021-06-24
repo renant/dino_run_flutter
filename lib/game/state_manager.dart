@@ -1,9 +1,6 @@
 import 'dart:math';
-import 'dart:ui';
 
-import 'package:flame/assets.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/foundation.dart';
 
 import 'coin.dart';
 import 'enemy.dart';
